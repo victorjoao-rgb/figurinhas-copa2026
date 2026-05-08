@@ -1,0 +1,308 @@
+openapi: 3.0.3
+info:
+  title: Figurinhas Copa do Mundo 2026 API
+  description: |
+    API para gerenciar o seu album de figurinhas da Copa do Mundo 2026.
+    Com essa API voce pode cadastrar, listar, buscar e remover figurinhas,
+    alem de contar as repetidas para facilitar as trocas com amigos.
+  version: 1.0.0
+  contact:
+    name: Suporte Copa 2026 API
+    email: suporte@copa2026api.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Servidor local de desenvolvimento
+  - url: https://api.copa2026.dev/v1
+    description: Servidor de producao
+
+tags:
+  - name: Figurinhas
+    description: Operacoes de CRUD para figurinhas do album
+  - name: Estatisticas
+    description: Contagens e estatisticas do album
+
+paths:
+  /figurinhas:
+    get:
+      tags:
+        - Figurinhas
+      summary: Listar todas as figurinhas
+      description: Retorna a lista completa de figurinhas do album com filtros opcionais.
+      operationId: listarFigurinhas
+      parameters:
+        - name: selecao
+          in: query
+          description: "Filtrar por codigo de selecao (ex: BRA, ARG)"
+          required: false
+          schema:
+            type: string
+            example: BRA
+        - name: repetida
+          in: query
+          description: Filtrar apenas repetidas ou nao repetidas
+          required: false
+          schema:
+            type: boolean
+            example: true
+        - name: raridade
+          in: query
+          description: Filtrar por nivel de raridade
+          required: false
+          schema:
+            type: string
+            enum: [comum, rara, especial, lendaria]
+      responses:
+        "200":
+          description: Lista retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 2
+                  figurinhas:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Figurinha"
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+    post:
+      tags:
+        - Figurinhas
+      summary: Cadastrar nova figurinha
+      description: Adiciona uma nova figurinha ao album. Se ja existir, incrementa a quantidade.
+      operationId: cadastrarFigurinha
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FigurinhaInput"
+      responses:
+        "201":
+          description: Figurinha cadastrada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: "Figurinha cadastrada com sucesso!"
+                  figurinha:
+                    $ref: "#/components/schemas/Figurinha"
+        "400":
+          $ref: "#/components/responses/ErroBadRequest"
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+  /figurinhas/{id}:
+    get:
+      tags:
+        - Figurinhas
+      summary: Buscar figurinha por ID
+      description: Retorna os detalhes de uma figurinha especifica.
+      operationId: buscarFigurinhaPorid
+      parameters:
+        - $ref: "#/components/parameters/FigurinhaId"
+      responses:
+        "200":
+          description: Figurinha encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Figurinha"
+        "404":
+          $ref: "#/components/responses/ErroNaoEncontrado"
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+    delete:
+      tags:
+        - Figurinhas
+      summary: Remover figurinha do album
+      description: Remove uma figurinha pelo ID. Se tiver repetidas, decrementa a quantidade.
+      operationId: removerFigurinha
+      parameters:
+        - $ref: "#/components/parameters/FigurinhaId"
+        - name: removerTodas
+          in: query
+          description: Se true, remove todas as copias de uma vez
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: Figurinha removida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: "Figurinha removida com sucesso!"
+                  figurinhaRemovida:
+                    type: boolean
+                    example: true
+        "404":
+          $ref: "#/components/responses/ErroNaoEncontrado"
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+  /figurinhas/repetidas/contagem:
+    get:
+      tags:
+        - Estatisticas
+      summary: Contar figurinhas repetidas
+      description: Retorna a contagem de repetidas agrupadas por selecao.
+      operationId: contarRepetidas
+      responses:
+        "200":
+          description: Contagem retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalRepetidas:
+                    type: integer
+                    example: 15
+                  porSelecao:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        selecao:
+                          type: string
+                          example: "Brasil"
+                        quantidade:
+                          type: integer
+                          example: 5
+        "500":
+          $ref: "#/components/responses/ErroInterno"
+
+components:
+  schemas:
+    Figurinha:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "fig_001"
+        codigo:
+          type: string
+          pattern: "^[A-Z]{3}-[0-9]{3}$"
+          example: "BRA-010"
+        jogador:
+          type: string
+          example: "Vinicius Jr."
+        selecao:
+          type: string
+          example: "Brasil"
+        posicao:
+          type: string
+          enum: [Goleiro, Lateral, Zagueiro, Volante, Meia, Atacante]
+          example: "Atacante"
+        raridade:
+          type: string
+          enum: [comum, rara, especial, lendaria]
+          example: "lendaria"
+        repetida:
+          type: boolean
+          example: false
+        quantidade:
+          type: integer
+          minimum: 1
+          example: 1
+        criadoEm:
+          type: string
+          format: date-time
+          example: "2025-05-01T10:00:00Z"
+
+    FigurinhaInput:
+      type: object
+      required:
+        - codigo
+        - jogador
+        - selecao
+        - posicao
+      properties:
+        codigo:
+          type: string
+          pattern: "^[A-Z]{3}-[0-9]{3}$"
+          example: "BRA-010"
+        jogador:
+          type: string
+          example: "Vinicius Jr."
+        selecao:
+          type: string
+          example: "Brasil"
+        posicao:
+          type: string
+          enum: [Goleiro, Lateral, Zagueiro, Volante, Meia, Atacante]
+          example: "Atacante"
+        raridade:
+          type: string
+          enum: [comum, rara, especial, lendaria]
+          default: comum
+          example: "lendaria"
+
+    Erro:
+      type: object
+      properties:
+        erro:
+          type: string
+          example: "NAO_ENCONTRADO"
+        mensagem:
+          type: string
+          example: "Figurinha nao encontrada"
+
+  parameters:
+    FigurinhaId:
+      name: id
+      in: path
+      description: ID unico da figurinha
+      required: true
+      schema:
+        type: string
+        example: "fig_001"
+
+  responses:
+    ErroBadRequest:
+      description: Dados invalidos na requisicao
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Erro"
+
+    ErroNaoEncontrado:
+      description: Recurso nao encontrado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Erro"
+
+    ErroInterno:
+      description: Erro interno do servidor
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Erro"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+security:
+  - ApiKeyAuth: []
