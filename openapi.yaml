@@ -49,9 +49,9 @@ paths:
         É possível filtrar por seleção, raridade ou se é repetida.
       operationId: listarFigurinhas
       parameters:
-        - name: selecao
+       - name: selecao
           in: query
-          description: Filtrar figurinhas por código de seleção (ex: BRA, ARG)
+          description: "Filtrar figurinhas por código de seleção (ex: BRA, ARG)"
           required: false
           schema:
             type: string
