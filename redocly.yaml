@@ -1,8 +1,3 @@
 apis:
   figurinhas-copa2026@v1:
     root: openapi.yaml
-
-styleguide:
-  rules:
-    no-unused-components: warn
-    operation-summary: error
