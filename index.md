@@ -1,5 +1,5 @@
-# ⚽ Figurinhas Copa do Mundo 2026
+# Figurinhas Copa do Mundo 2026
 
-Bem-vindo à documentação da API de figurinhas da Copa 2026!
+Bem-vindo a documentacao da API de figurinhas da Copa 2026!
 
-{% openapi definitionId="figurinhas-copa2026" /%}
+{% api-reference definitionId="figurinhas-copa2026" /%}
