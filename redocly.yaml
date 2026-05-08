@@ -1,0 +1,20 @@
+apis:
+  figurinhas-copa2026@v1:
+    root: openapi.yaml
+
+rules:
+  no-unused-components: warn
+  operation-summary: error
+  operation-operationId: error
+  tag-description: warn
+
+theme:
+  openapi:
+    theme:
+      colors:
+        primary:
+          main: "#1a8a2e"
+      typography:
+        fontFamily: "Inter, sans-serif"
+        headings:
+          fontFamily: "Inter, sans-serif"

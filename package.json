@@ -1,0 +1,23 @@
+{
+  "name": "figurinhas-copa2026-api",
+  "version": "1.0.0",
+  "description": "API de gerenciamento de figurinhas da Copa do Mundo 2026 ⚽🏆",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": ["copa2026", "figurinhas", "api", "rest"],
+  "author": "Seu Nome",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
