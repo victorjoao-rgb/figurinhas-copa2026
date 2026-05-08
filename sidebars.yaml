@@ -1,0 +1,5 @@
+- page: index.md
+  label: Inicio
+
+- page: apis/openapi.yaml
+  label: Referencia da API
