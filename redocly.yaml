@@ -2,12 +2,8 @@ apis:
   figurinhas-copa2026@v1:
     root: openapi.yaml
 
-nav:
-  - label: Documentação da API
-    page: index.mdx
-
-rules:
-  no-unused-components: warn
-  operation-summary: error
-  operation-operationId: error
-  tag-description: warn
+styleguide:
+  rules:
+    no-unused-components: warn
+    operation-summary: error
+    operation-operationId: error
