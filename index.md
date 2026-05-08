@@ -2,4 +2,4 @@
 
 Bem-vindo a documentacao da API de figurinhas da Copa 2026!
 
-{% openapi-reference definitionId="figurinhas-copa2026" /%}
+Navegue pela **Referencia da API** no menu ao lado para ver todos os endpoints.
