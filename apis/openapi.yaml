@@ -30,7 +30,7 @@ paths:
     get:
       tags:
         - Figurinhas
-      summary: Listar todas as figurinhas
+      summary: Listar as figurinhas
       description: Retorna a lista completa de figurinhas do album com filtros opcionais.
       operationId: listarFigurinhas
       parameters:
